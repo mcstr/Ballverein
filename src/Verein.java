@@ -5,8 +5,8 @@ public class Verein implements Serializable {
     private String name;
     private String geschosseneTore;
     private String kassierteTore;
-    private double Punkte;
-    private Integer Spiele;
+    private int punkte;
+    private int spiele;
 
 
 
@@ -18,12 +18,12 @@ public class Verein implements Serializable {
         return name;
     }
 
-    public double getPunkte() {
-        return Punkte;
+    public int getPunkte() {
+        return punkte;
     }
 
-    public void setPunkte(double punkte) {
-        Punkte = punkte;
+    public void setPunkte(int punkte) {
+        this.punkte = punkte;
     }
 
     public String getGeschosseneTore() {
@@ -42,8 +42,8 @@ public class Verein implements Serializable {
         this.kassierteTore = kassierteTore;
     }
 
-    public Integer getSpiele() {
-        return Spiele;
+    public int getSpiele() {
+        return spiele;
     }
 
     public String toString() {

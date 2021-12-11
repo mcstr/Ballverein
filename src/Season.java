@@ -5,7 +5,8 @@ import java.util.Scanner;
 
 public class Season {
     public Console console;
-    public ArrayList<Verein> vereinListe = new ArrayList<>();
+    public ArrayList<Verein> teamsList = new ArrayList<>();
+    public ArrayList<Game> gameList = new ArrayList<>();
     public Scanner scanner;
     public String filename;
     public String name;
@@ -14,7 +15,7 @@ public class Season {
 
     public Season() {
         this.console = new Console();
-        this.scanner = new Scanner(System.in);
+        this.scanner = new Scanner(System.in).useDelimiter("\n");
     }
 
     public boolean seasonStarted() {
@@ -23,9 +24,10 @@ public class Season {
 
 
         if (fileList.length > 0) {
+            
             this.filename = fileList[0].getName();
             this.name = filename.substring(0, filename.lastIndexOf('.'));
-            this.vereinListe = VereinBearbeiten.readVereine(this.filename);  
+            this.teamsList = EditTeam.readTeams(this.numberOfTeams, this.filename);  
             fileExist = true;
 
         } else {
@@ -41,7 +43,7 @@ public class Season {
 
     public int wellcome() {
         if (seasonStarted()) {
-            this.console.wellcomeMessage(this.name);
+            this.console.printWellcomeMessage(this.name);
             int selected = this.scanner.nextInt();
             return selected;
         } else {
@@ -51,46 +53,59 @@ public class Season {
     }
 
     public void startConfigSeason() {
-        System.out.println("Bitte geben Sie den Namen des Turniers ein:");
+
+        this.console.printTournamentName();
         this.name = this.scanner.nextLine();
         this.filename = this.name + ".txt";
         
         System.out.println("Bitte geben Sie die Anzahl der Teams ein:");
         this.numberOfTeams = this.scanner.nextInt();
-        VereinBearbeiten.createFile(this.filename);
+        EditTeam.createFile(this.filename);
         this.addTeams();
+        this.createFixture(this.teamsList);
     }
 
     public void addTeams() {
 
-        while (this.numberOfTeams != this.vereinListe.size()) {
+        while (this.numberOfTeams != this.teamsList.size()) {
             this.addTeam();
         }
-        VereinBearbeiten.speichern(this.vereinListe, this.filename);
+        EditTeam.save(this.teamsList, this.filename);
         this.wellcome();
     }
 
     public void showTable() {
-        this.console.tabelle(this.name);
-        VereinBearbeiten.ausgeben(this.filename);
+        this.console.printTabelle(this.name);
+        EditTeam.printTeamOnTerminal(this.numberOfTeams, this.filename);
     }
 
-    public void addSpiel() {
-        this.console.selectTeam();
-        ArrayList<Verein> list = VereinBearbeiten.readVereine(this.filename);
+    public void addGame() {
+        try {
+            this.console.printSelectTeam();
+            ArrayList<Verein> list = EditTeam.readTeams(this.numberOfTeams, this.filename);
+    
+            for (Verein verein : list) {
+                System.out.println("**" + verein.getName());
+            }
+            this.console.printMakeSelection();
+            String selectedFirstTeam = this.scanner.next();
+            // Spiel spiel = new Spiel()
 
-        for (Verein verein : list) {
-            System.out.println(verein.getName());
+            // VereinBearbeiten.update(selected, this.filename);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        this.console.makeSelection();
-        String selected = this.scanner.nextLine();
-        VereinBearbeiten.update(selected, this.filename);
     }
+
     public void addTeam() {
-        this.console.addTeamText();
+        this.console.printaddTeam();
         String name = this.scanner.next();
         Verein team = new Verein(name);
-        this.vereinListe.add(team);
+        this.teamsList.add(team);
+    }
+    
+    public void createFixture (ArrayList<Verein> teamsList) {
+        
     }
 
     public void start() { 
@@ -104,7 +119,7 @@ public class Season {
                         this.showTable();
                         break;
                     case 2:
-                        this.addSpiel();
+                        this.addGame();
                         break;
                     case 3:
                         run = false;
@@ -116,4 +131,6 @@ public class Season {
 
         }
     }
+
+
 }

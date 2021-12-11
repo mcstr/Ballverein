@@ -1,0 +1,57 @@
+// Añadir y borrar equipos
+// Partidos de ida y vuelta
+// Golaverage
+// Crear una clase Partido
+// Crear una clase Jornada
+
+
+
+
+Aufgabe:
+Erstellen Sie ein Java-Anwendung, die es ermöglicht, bei einer variablen Anzahl von Ballsportvereinen die jeweiligen Spielpaarungen der Saison zu generieren.
+Dabei sollen die Vereine als Objekte in einer Datei gespeichert werden. Nach Erfassung der Vereinsnamen werden die möglichen Spielpaarungen erzeugt, die wiederum als einzelne Objekte in einer
+zweiten Datei gespeichert werden. Anschließend soll es möglich sein, die Spielpaarungen auf den
+Bildschirm ausgegeben werden. Die Spielergebnisse (Tore) können erfasst werden. Jedes Spielergebnis wird dann zu der passenden Paarung im Objekt abgespeichert. Das Spielergebnis muss in Form von
+Punkten dem Verein zugeordnet werden. Abschließend soll es möglich sein, eine sortierte Tabelle auszugeben.
+Die einzelnen Arbeitsschritte sollen einzeln durchführbar sein. Codieren Sie Ihr Programm deshalb
+menügesteuert. Das Menü sollte folgendes Aussehen haben:
+1. Erfassen und Speichern der Vereine
+2. Generieren der Spielpaarungen
+3. Ausgeben Tabelle
+4. Erfassen Spielergebnisse
+5. Ende
+
+
+CHECK:
+
+	public static void main(String[] args) throws Exception {
+		String[] teams = new String[18];
+		for (int i = 0; i < teams.length; i++) {
+			teams[i] = "Team " + (i+1);
+		}
+		int n = teams.length - 1;
+		System.out.println("----HINRUNDE----");
+		for (int i = 1; i < (n + 1); i++) {
+			System.out.println("---" + i + ".Spieltag---");
+			if (i % 2 == 0) {
+				printMatch(teams[i - 1], teams[n]);
+			} else {
+				printMatch(teams[n], teams[i - 1]);
+			}
+			for (int k = 1; k < (n + 1) / 2; k++) {
+				int tmp = (i + k) % n;
+				int teamA = tmp == 0 ? n : tmp;
+				tmp = ((i - k % n) + n) % n;
+				int teamB = tmp == 0 ? n : tmp;
+				if (k % 2 != 0) {
+					printMatch(teams[teamA - 1], teams[teamB - 1]);
+				} else {
+					printMatch(teams[teamB - 1], teams[teamA - 1]);
+				}
+			}
+		}
+	}
+
+	private static void printMatch(String teamA, String teamB) {
+		System.out.println(teamA + " : " + teamB);
+	}
