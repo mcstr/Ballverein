@@ -1,11 +1,15 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Fixture {
+public class Fixture implements Serializable{
     ArrayList<Game> games;
-    int matchDayNumber;
+    int id;
 
-    public Fixture (ArrayList<Game> games, int matchDayNumber) {
-        this.games = games;
-        this.matchDayNumber = matchDayNumber;
+    public Fixture (int id) {
+        this.id = id;
+    }
+
+    public void setGame (Game game) {
+        this.games.add(game);
     }
 }

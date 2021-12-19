@@ -1,12 +1,24 @@
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class Game {
+public class Game implements Serializable{
     int id;
-    Verein team1;
-    Verein team2;
+    Team team1;
+    Team team2;
     int goalsTeam1;
     int goalsTeam2;
+    int fixtureId;
 
-    public Game (Verein team1, Verein team2, int goalsTeam1, int goalsTeam2) {
+    public Game (Team team1, Team team2, int fixtureId, int id) {
+        this.fixtureId = fixtureId;
+        this.team1 = team1;
+        this.team2 = team2;
+        this.id = id;
+    }
+
+    public void updateResult (Team team1, Team team2, int goalsTeam1, int goalsTeam2) {
+
         if (goalsTeam1 > goalsTeam2) {
             
             team1.setPunkte(team1.getPunkte() + 3);
@@ -26,7 +38,14 @@ public class Game {
 
         team2.setGeschosseneTore(team2.getGeschosseneTore() + goalsTeam2);
         team2.setKassierteTore(team2.getKassierteTore() + goalsTeam1);
+    }
 
+    @Override
+
+    public String toString() {
+        String string = String.format(Locale.GERMANY, "%s.%s-%s", this.id,
+            this.team1.getName(), this.team2.getName());
+            return string;
     }
 
 }

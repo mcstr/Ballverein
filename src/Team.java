@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.Locale;
 
-public class Verein implements Serializable {
+public class Team implements Serializable {
     private String name;
     private String geschosseneTore;
     private String kassierteTore;
@@ -10,7 +10,7 @@ public class Verein implements Serializable {
 
 
 
-    public Verein (String name) {
+    public Team (String name) {
         this.name = name;
     }
 

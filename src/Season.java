@@ -2,126 +2,39 @@ import java.util.ArrayList;
 import java.io.*;
 import java.util.Scanner;
 
-
 public class Season {
-    public Console console;
-    public ArrayList<Verein> teamsList = new ArrayList<>();
-    public ArrayList<Game> gameList = new ArrayList<>();
+    public ArrayList<Team> teamsList = new ArrayList<>();
+    public ArrayList<Fixture> fixturesList = new ArrayList<>();
     public Scanner scanner;
-    public String filename;
+    public String teamFileName;
+    final String fixtureFileName = "fixture.txt";
     public String name;
     public int numberOfTeams;
 
-
     public Season() {
-        this.console = new Console();
         this.scanner = new Scanner(System.in).useDelimiter("\n");
     }
 
-    public boolean seasonStarted() {
-        File[] fileList = this.checkIfFileExists();
-        boolean fileExist = false;
-
-
-        if (fileList.length > 0) {
-            
-            this.filename = fileList[0].getName();
-            this.name = filename.substring(0, filename.lastIndexOf('.'));
-            this.teamsList = EditTeam.readTeams(this.numberOfTeams, this.filename);  
-            fileExist = true;
-
-        } else {
-            fileExist = false;
-        }
-        return fileExist;
-    }
-    
-    public File[] checkIfFileExists(){
-        final File folder = new File("Season");
-        return folder.listFiles();
-    }
-
-    public int wellcome() {
-        if (seasonStarted()) {
-            this.console.printWellcomeMessage(this.name);
-            int selected = this.scanner.nextInt();
-            return selected;
-        } else {
-            startConfigSeason();
-            return 0;
-        }
-    }
-
-    public void startConfigSeason() {
-
-        this.console.printTournamentName();
-        this.name = this.scanner.nextLine();
-        this.filename = this.name + ".txt";
-        
-        System.out.println("Bitte geben Sie die Anzahl der Teams ein:");
-        this.numberOfTeams = this.scanner.nextInt();
-        EditTeam.createFile(this.filename);
-        this.addTeams();
-        this.createFixture(this.teamsList);
-    }
-
-    public void addTeams() {
-
-        while (this.numberOfTeams != this.teamsList.size()) {
-            this.addTeam();
-        }
-        EditTeam.save(this.teamsList, this.filename);
-        this.wellcome();
-    }
-
-    public void showTable() {
-        this.console.printTabelle(this.name);
-        EditTeam.printTeamOnTerminal(this.numberOfTeams, this.filename);
-    }
-
-    public void addGame() {
-        try {
-            this.console.printSelectTeam();
-            ArrayList<Verein> list = EditTeam.readTeams(this.numberOfTeams, this.filename);
-    
-            for (Verein verein : list) {
-                System.out.println("**" + verein.getName());
-            }
-            this.console.printMakeSelection();
-            String selectedFirstTeam = this.scanner.next();
-            // Spiel spiel = new Spiel()
-
-            // VereinBearbeiten.update(selected, this.filename);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void addTeam() {
-        this.console.printaddTeam();
-        String name = this.scanner.next();
-        Verein team = new Verein(name);
-        this.teamsList.add(team);
-    }
-    
-    public void createFixture (ArrayList<Verein> teamsList) {
-        
-    }
-
-    public void start() { 
+    public void start() {
         boolean run = true;
+        this.configuration();
         while (run) {
             try {
                 int selected = this.wellcome();
-
                 switch (selected) {
                     case 1:
-                        this.showTable();
+                        this.addTeam();
                         break;
                     case 2:
-                        this.addGame();
+                        this.generateFixture();
                         break;
                     case 3:
+                        this.showTable();
+                        break;
+                    case 4:
+                        this.registerGameResults();
+                        break;
+                    case 5:
                         run = false;
                         break;
                 }
@@ -132,5 +45,105 @@ public class Season {
         }
     }
 
+    public void configuration() {
+        Console.printTournamentName();
+        this.name = this.scanner.nextLine();
+        this.teamFileName = this.name + ".txt";
+        if (!new File("Season", this.teamFileName).exists()) {
+            Console.printCreatingNewSeason();
+            EditSeasonFile.createFile(this.teamFileName);
+            EditSeasonFile.createFile(this.fixtureFileName);
+            EditSeasonFile.saveFile(this.teamFileName);
+            EditSeasonFile.saveFile(this.fixtureFileName);
+        } else {
+            Console.printLoadingSeason(this.name);
+            this.teamsList = EditSeasonFile.readTeamsFirstTime(this.teamFileName);
+            this.numberOfTeams = this.teamsList.size();
+            this.fixturesList = EditFixtureFile.readFixturesFirstTime(this.fixtureFileName);
+            System.out.println("the number of teams is: " + this.teamsList.size());
+            // Add reading the fixtures;
+        }
+
+    }
+
+    public int wellcome() {
+        Console.printWellcomeMessage(this.name);
+        int selected = this.scanner.nextInt();
+        return selected;
+    }
+
+    public void addTeam() {
+        Console.printaddTeam();
+        String name = this.scanner.next();
+        Team team = new Team(name);
+        this.numberOfTeams++;
+        this.teamsList.add(team);
+        EditSeasonFile.saveTeams(this.teamsList, this.teamFileName);
+    }
+
+    public void generateFixture() {
+        
+        this.fixturesList.clear();
+        int n = this.teamsList.size() - 1;
+
+        for (int i = 1; i < (n + 1); i++) {
+            int counter = 0;
+            ArrayList<Game> games = new ArrayList<>();
+            Fixture fixture = new Fixture(i);
+            if (i % 2 == 0) {
+                counter ++;
+                games.add(new Game(this.teamsList.get(i - 1), this.teamsList.get(n), fixture.id, counter));
+            } else {
+                counter ++;
+                games.add(new Game(this.teamsList.get(n), this.teamsList.get(i - 1), fixture.id, counter));
+            }
+
+            for (int k = 1; k < (n + 1) / 2; k++) {
+                int tmp = (i + k) % n;
+                int teamA = tmp == 0 ? n : tmp;
+                tmp = ((i - k % n) + n) % n;
+                int teamB = tmp == 0 ? n : tmp;
+                if (k % 2 != 0) {
+                    counter ++;
+                    games.add(new Game(this.teamsList.get(teamA - 1), this.teamsList.get(teamB - 1), fixture.id, counter));
+                } else {
+                    counter ++;
+                    games.add(new Game(this.teamsList.get(teamB - 1), this.teamsList.get(teamA - 1), fixture.id, counter));
+                }
+            }
+            fixture.games = games;
+            this.fixturesList.add(fixture);
+        }
+        EditFixtureFile.deleteFile(this.fixtureFileName);
+        EditFixtureFile.saveFixtures(this.fixturesList, this.fixtureFileName);
+        Console.printFixturesOnTerminal(this.fixturesList);   
+        
+
+    }
+
+    public void registerGameResults() {
+        if (this.fixturesList.size() > 0) {
+            Console.printFixturesOnTerminal(this.fixturesList);
+            Console.printSelectFixture();
+            int fixtureId = this.scanner.nextInt();
+            Console.printSelectGame();
+            int gameId = this.scanner.nextInt();
+
+
+            
+        }else {
+            System.out.println("Please generate fixtures first");
+        }
+        
+    }
+
+    public void showTable() {
+        Console.printScoreboard(this.name);
+        Console.printTeamsOnTerminal(this.teamsList);
+    }
+
+    public Game findGame(int fixtureId, int spielId) {
+        return this.fixturesList.get(fixtureId - 1).games.get(spielId - 1);
+    }
 
 }
