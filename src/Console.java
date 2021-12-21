@@ -67,7 +67,6 @@ public class Console {
             System.out.println("---" + fixture.id + ".Matchday---");
 
             for (Game game : fixture.games) {
-                System.out.println(game.id);
                 System.out.println(game.toString());
             }
             System.out.println(" ");
@@ -80,6 +79,10 @@ public class Console {
 
     public static void printSelectFixture() {
         System.out.println("Please select a fixture from the list:");
+    }
+
+    public static void printAddGoalsTeam(String team) {
+        System.out.println("How many goals has " + team + " scored?:");
     }
 }
 

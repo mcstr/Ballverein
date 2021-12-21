@@ -3,10 +3,10 @@ import java.util.Locale;
 
 public class Team implements Serializable {
     private String name;
-    private String geschosseneTore;
-    private String kassierteTore;
-    private int punkte;
-    private int spiele;
+    private int scoredGoals = 0;
+    private int recievedGoals = 0;
+    private int points;
+    private int gamesPlayed;
 
 
 
@@ -18,37 +18,45 @@ public class Team implements Serializable {
         return name;
     }
 
-    public int getPunkte() {
-        return punkte;
+    public int getPoints() {
+        return points;
     }
 
-    public void setPunkte(int punkte) {
-        this.punkte = punkte;
+    public void setPoints(int points) {
+        this.points += points;
     }
 
-    public String getGeschosseneTore() {
-        return geschosseneTore;
+    public int getScoredGoals() {
+        return scoredGoals;
     }
 
-    public void setGeschosseneTore(String geschosseneTore) {
-        this.geschosseneTore = geschosseneTore;
+    public void setScoredGoals(int scoredGoals) {
+        this.scoredGoals += scoredGoals;
     }
 
-    public String getKassierteTore() {
-        return kassierteTore;
+    public int getRecievedGoals() {
+        return recievedGoals;
     }
 
-    public void setKassierteTore(String kassierteTore) {
-        this.kassierteTore = kassierteTore;
+    public void setrecievedGoals(int recievedGoals) {
+        this.recievedGoals += recievedGoals;
     }
 
-    public int getSpiele() {
-        return spiele;
+    public int getGamesPlayed() {
+        return gamesPlayed;
+    }
+
+    public void setGamesPlayed() {
+        this.gamesPlayed ++;
+    }
+
+    public void unsetGamesPlayed() {
+        this.gamesPlayed --;
     }
 
     public String toString() {
         String reString = String.format(Locale.GERMANY, "%-15s%-15s%-15s%-15s%-15s", this.getName(),
-                this.getPunkte(), this.getSpiele(), this.getGeschosseneTore(), this.getKassierteTore());
+                this.getPoints(), this.getGamesPlayed(), Integer.toString(this.getScoredGoals()), Integer.toString(this.getRecievedGoals()));
         return reString;
     }
 }

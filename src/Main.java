@@ -4,8 +4,5 @@ public class Main {
 
         Season season = new Season();
         season.start();
-
-        
-
     }
 }
