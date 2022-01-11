@@ -12,15 +12,19 @@ public class Console {
 
     public static void printScoreboard(String competitionName) {
         System.out.println(" ");
-        System.out.println(String.format(Locale.GERMANY, "\r\n%-15s\r\n%-15s%-15s%-15s%-15s%-15s\r\n", competitionName,
-        "Team", "Punkte", "Spiele", "Gesch. Tore", "Kass. Tore"));
+        String string = String.format(Locale.GERMANY, "\r\n**%s**\r\n\r\n| %-15s | %15s | %15s | %15s | %15s |", competitionName,
+        "Team", "Punkte", "Spiele", "Gesch. Tore", "Kass. Tore");
+        int longitud = string.length();
+        System.out.println(string);
+        System.out.println(new String(new char[longitud - 14]).replace('\0', '-'));
     }
+
     public static void printSelectTeam() {
         System.out.print("Manschaft auswählen:\n");
     }
+
     public static void printMakeSelection() {
         System.out.println("Bitte Eingabe tätigen: ");
-
     }
 
     public static void printaddTeam() {
@@ -42,7 +46,6 @@ public class Console {
                 
             System.out.println(teams.get(i).toString());
         }
-
     }
 
     public static void printCreatingNewSeason() {
@@ -83,6 +86,26 @@ public class Console {
 
     public static void printAddGoalsTeam(String team) {
         System.out.println("How many goals has " + team + " scored?:");
+    }
+
+    public static void printRegisterTeams () {
+        System.out.println("Please, register a few Teams first!");
+    }
+
+    public static void printGameAlreadyPlayed() {
+        System.out.println("This game has been already played. Do you want to update it? Y/N:");
+    }
+
+    public static void printGenerateFixtures() {
+        System.out.println("Please generate fixtures first");
+    }
+
+    public static void printNumberOfTeams(int size) {
+        System.out.println("the number of teams is: " + size);
+    }
+
+    public static void printWariningMessage() {
+        System.out.println("This will reset all the Season's progress, Do you want to proceed? [Y/N]");
     }
 }
 

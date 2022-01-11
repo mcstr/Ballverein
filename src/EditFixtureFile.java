@@ -8,7 +8,7 @@ public class EditFixtureFile {
         new File("Season/" + fileName);
     }
 
-    public static void saveFixtures(ArrayList<Fixture> objects, String fileName) {
+    public static void saveFixturesFile(ArrayList<Fixture> objects, String fileName) {
         try {
 
             File fl = new File("Season/" + fileName);
@@ -16,35 +16,16 @@ public class EditFixtureFile {
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             ObjectOutputStream oss = new ObjectOutputStream(bos);
 
-            for (Fixture object : objects) {
-                oss.writeObject(object);
+            if (objects.size() != 0) {
+                for (Fixture object : objects) {
+                    oss.writeObject(object);
+                }
+                oss.close();
             }
-            oss.close();
 
         } catch (IOException e) {
-
             System.out.print(e.getMessage());
         }
-    }
-
-    public static ArrayList<Fixture> readFixtures(int length, String fileName) {
-        ArrayList<Fixture> fixturesList = new ArrayList<>();
-
-        try {
-            final File folder = new File("Season");
-            File fl = new File(folder + "/" + fileName);
-            FileInputStream fis = new FileInputStream(fl);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-
-            for (int i = 0; i < length; i++) {
-                fixturesList.add((Fixture) ois.readObject());
-            }
-            ois.close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return fixturesList;
     }
 
     public static ArrayList<Fixture> readFixturesFirstTime(String fileName) {
@@ -53,7 +34,6 @@ public class EditFixtureFile {
         try {
             final File folder = new File("Season");
             File fl = new File(folder + "/" + fileName);
-            System.out.println(fl.getName());
             FileInputStream fis = new FileInputStream(fl);
             BufferedInputStream bis = new BufferedInputStream(fis);
             ObjectInputStream ois = new ObjectInputStream(bis);
@@ -71,7 +51,8 @@ public class EditFixtureFile {
             }
             ois.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            String error = (e.getMessage() != null) ? e.getMessage() :"Fixture have not been created";
+            System.out.println(error);
         }
         return fixtureList;
     }

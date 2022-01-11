@@ -55,9 +55,15 @@ public class Team implements Serializable {
     }
 
     public String toString() {
-        String reString = String.format(Locale.GERMANY, "%-15s%-15s%-15s%-15s%-15s", this.getName(),
+        String reString = String.format(Locale.GERMANY, "| %-15s | %15s | %15s | %15s | %15s |", this.getName(),
                 this.getPoints(), this.getGamesPlayed(), Integer.toString(this.getScoredGoals()), Integer.toString(this.getRecievedGoals()));
         return reString;
     }
-}
 
+    public void resetTeam() {
+        this.scoredGoals = 0;
+        this.recievedGoals = 0;
+        this.points = 0;
+        this.gamesPlayed = 0;
+    }
+}

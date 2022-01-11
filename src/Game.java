@@ -26,16 +26,15 @@ public class Game implements Serializable{
     public String toString() {
         String finalString = "";
         if (!this.played) {
-            String string = String.format(Locale.GERMANY, "%s.%s-%s", this.id,
+            String string = String.format(Locale.GERMANY, "%s. %s - %s", this.id,
             this.team1.getName(), this.team2.getName());
             finalString = string; 
         }
         if (this.played) {
-            String string = String.format(Locale.GERMANY, "%s.%s(%s)-%s(%s)", this.id,
+            String string = String.format(Locale.GERMANY, "%s. %s (%s) - %s (%s)", this.id,
             this.team1.getName(), this.goalsTeam1, this.team2.getName(), this.goalsTeam2);
             finalString = string; 
         }
         return finalString;
     }
-
 }
